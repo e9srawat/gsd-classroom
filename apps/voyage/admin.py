@@ -1,7 +1,7 @@
 """
 admin.py
 """
-from django.urls import reverse
+
 from django.utils.html import format_html
 from django.contrib import admin
 
@@ -23,19 +23,18 @@ class FacultyAdmin(admin.ModelAdmin):
     """
 
     list_display = ("user", "num_courses", "num_assignments", "graded_assignments")
+
     def num_courses(self, obj):
         """
         Returns number of courses.
         """
         courses = obj.courses()
-        ids=[i.id for i in courses]
+        ids = [i.id for i in courses]
         if courses:
-            html ='<a href="/admin/voyage/course/?id__in='
-            for id in ids:
-                html += f'{id},'
-            html = html[:-1]
-            html+=f'">{len(courses)}</a>'
-            print(html)
+            html = '<a href="/admin/voyage/course/?id__in='
+            for i in ids:
+                html += f"{i},"
+            html = html[:-1] + f'">{len(courses)}</a>'
             return format_html(html)
         return 0
 
@@ -45,12 +44,12 @@ class FacultyAdmin(admin.ModelAdmin):
         """
         content = obj.content()
         assignments = set(j for i in content for j in i.assignment_set.all())
+        ids = [i.id for i in assignments]
         if assignments:
-            html = f'<p>{len(assignments)}</p>'
-            html += '<div class="dropdown-content">'
-            for assignment in assignments:
-                url = reverse("admin:voyage_course_change", args=[assignment.id])
-                html += f'<a href="{url}">{assignment}</a><br>'
+            html = '<a href="/admin/voyage/assignment/?id__in='
+            for i in ids:
+                html += f"{i},"
+            html = html[:-1] + f'">{len(assignments)}</a>'
             return format_html(html)
         return 0
 
@@ -59,12 +58,12 @@ class FacultyAdmin(admin.ModelAdmin):
         Returns number of assignments that have been graded
         """
         assignments = obj.assignments_graded()
+        ids = [i.id for i in assignments]
         if assignments:
-            html = f'<p>{len(assignments)}</p>'
-            html += '<div class="dropdown-content">'
-            for assignment in assignments:
-                url = reverse("admin:voyage_course_change", args=[assignment.id])
-                html += f'<a href="{url}">{assignment}</a><br>'
+            html = '<a href="/admin/voyage/studentassignment/?id__in='
+            for i in ids:
+                html += f"{i},"
+            html = html[:-1] + f'">{len(assignments)}</a>'
             return format_html(html)
         return 0
 
@@ -84,31 +83,49 @@ class StudentAdmin(admin.ModelAdmin):
         "avg_grade",
     )
 
-    def program(self, obj):
-        """
-        program each student is enrolled in
-        """
-        courses = obj.courses()
-        programs = set(j.program for i in courses for j in i.assignment_set.all())
-        return programs
+    list_display_links = ("user", "program")
 
     def num_courses(self, obj):
         """
         number of courses each student is enrolled in
         """
-        return len(obj.courses())
+        courses = obj.courses()
+        ids = [i.id for i in courses]
+        if courses:
+            html = '<a href="/admin/voyage/course/?id__in='
+            for i in ids:
+                html += f"{i},"
+            html = html[:-1] + f'">{len(courses)}</a>'
+            return format_html(html)
+        return 0
 
     def assignments_assigned(self, obj):
         """
         number of assignments assigned to the student
         """
-        return len(obj.assignments())
+        assignments = obj.assignments()
+        ids = [i.id for i in assignments]
+        if assignments:
+            html = '<a href="/admin/voyage/assignment/?id__in='
+            for i in ids:
+                html += f"{i},"
+            html = html[:-1] + f'">{len(assignments)}</a>'
+            return format_html(html)
+        return 0
 
     def assignments_submitted(self, obj):
         """
         number of assignments each student has submitted
         """
-        return len(obj.assignments_submitted())
+        assignments = obj.assignments_submitted()
+        ids = [i.id for i in assignments]
+        if assignments:
+            html = '<a href="/admin/voyage/studentassignment/?id__in='
+            for i in ids:
+                html += f"{i},"
+            html = html[:-1] + f'">{len(assignments)}</a>'
+            return format_html(html)
+        return 0
 
     def avg_grade(self, obj):
         """
@@ -136,13 +153,28 @@ class ContentAdmin(admin.ModelAdmin):
         """
         assignments = obj.assignment_set.all()
         courses = set(i.course for i in assignments)
-        return len(courses)
+        ids = [i.id for i in courses]
+        if courses:
+            html = '<a href="/admin/voyage/course/?id__in='
+            for i in ids:
+                html += f"{i},"
+            html = html[:-1] + f'">{len(courses)}</a>'
+            return format_html(html)
+        return 0
 
     def num_assignments(self, obj):
         """
         number of assignments that use each content
         """
-        return len(obj.assignment_set.all())
+        assignments = obj.assignment_set.all()
+        ids = [i.id for i in assignments]
+        if assignments:
+            html = '<a href="/admin/voyage/assignment/?id__in='
+            for i in ids:
+                html += f"{i},"
+            html = html[:-1] + f'">{len(assignments)}</a>'
+            return format_html(html)
+        return 0
 
 
 @admin.register(Program)
@@ -159,13 +191,29 @@ class ProgramAdmin(admin.ModelAdmin):
         """
         assignments = obj.assignment_set.all()
         courses = set(i.course for i in assignments)
-        return len(courses)
+        ids = [i.id for i in courses]
+        if courses:
+            html = '<a href="/admin/voyage/course/?id__in='
+            for i in ids:
+                html += f"{i},"
+            html = html[:-1]
+            html += f'">{len(courses)}</a>'
+            return format_html(html)
+        return 0
 
     def num_students(self, obj):
         """
         number of students in each program
         """
-        return len(obj.students())
+        students = obj.students()
+        ids = [i.id for i in students]
+        if students:
+            html = '<a href="/admin/voyage/student/?id__in='
+            for i in ids:
+                html += f"{i},"
+            html = html[:-1] + f'">{len(students)}</a>'
+            return format_html(html)
+        return 0
 
 
 @admin.register(Course)
@@ -180,7 +228,15 @@ class CourseAdmin(admin.ModelAdmin):
         """
         number of assignments in each course
         """
-        return len(obj.assignments())
+        assignments = obj.assignments()
+        ids = [i.id for i in assignments]
+        if assignments:
+            html = '<a href="/admin/voyage/assignment/?id__in='
+            for i in ids:
+                html += f"{i},"
+            html = html[:-1] + f'">{len(assignments)}</a>'
+            return format_html(html)
+        return 0
 
     def graded_100(self, obj):
         """
@@ -193,7 +249,14 @@ class CourseAdmin(admin.ModelAdmin):
             for j in i.studentassignment_set.filter(grade__isnull=False):
                 if int(j.grade) == max_value:
                     graded.add(j)
-        return len(graded)
+        ids = [i.id for i in graded]
+        if graded:
+            html = '<a href="/admin/voyage/studentassignment/?id__in='
+            for i in ids:
+                html += f"{i},"
+            html = html[:-1] + f'">{len(graded)}</a>'
+            return format_html(html)
+        return 0
 
 
 @admin.register(Assignment)

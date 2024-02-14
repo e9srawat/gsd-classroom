@@ -140,15 +140,13 @@ class Course(QuxModel):
         """
         list of all content in the current course
         """
-        assignments = self.assignment_set.all()
-        contents_list = set(i.content for i in assignments)
-        return list(contents_list)
+        return set(Content.objects.filter(assignment__course=self))
 
     def assignments(self):
         """
         list of all assignments in the current course
         """
-        return self.assignment_set.all()
+        return Assignment.objects.filter(course=self)
 
     def random_data(self):
         """
@@ -204,16 +202,13 @@ class Student(QuxModel):
         """
         List of courses the student is doing
         """
-        student_assignments = self.studentassignment_set.all()
-        course_list = [i.assignment.course for i in student_assignments]
-        return course_list
+        return set(Course.objects.filter(assignment__program__student=self))
 
     def assignments(self):
         """
         List of assignments for the student
         """
-        program = self.program
-        return program.assignment_set.all()
+        return Assignment.objects.filter(program__student=self)
 
     def assignments_submitted(self, assignment=None):
         """
@@ -300,7 +295,7 @@ class Assignment(QuxModel):
         """
         List of students with current assignment
         """
-        return self.program.student_set.all()
+        return Student.objects.filter(program__assignment=self)
 
     def submissions(self, graded=None):
         """
