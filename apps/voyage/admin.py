@@ -33,7 +33,7 @@ class FacultyAdmin(admin.ModelAdmin):
         if courses:
             html = '<a href="/admin/voyage/course/?id__in='
             for i in ids:
-                html += f"{i},"
+                html = "".join((html, f"{i},"))
             return format_html(html[:-1] + f'">{len(courses)}</a>')
         return 0
 
@@ -47,7 +47,7 @@ class FacultyAdmin(admin.ModelAdmin):
         if assignments:
             html = '<a href="/admin/voyage/assignment/?id__in='
             for i in ids:
-                html += f"{i},"
+                html = "".join((html, f"{i},"))
             return format_html(html[:-1] + f'">{len(assignments)}</a>')
 
         return 0
@@ -61,7 +61,7 @@ class FacultyAdmin(admin.ModelAdmin):
         if assignments:
             html = '<a href="/admin/voyage/studentassignment/?id__in='
             for i in ids:
-                html += f"{i},"
+                html = "".join((html, f"{i},"))
             return format_html(html[:-1] + f'">{len(assignments)}</a>')
 
         return 0
@@ -93,7 +93,7 @@ class StudentAdmin(admin.ModelAdmin):
         if courses:
             html = '<a href="/admin/voyage/course/?id__in='
             for i in ids:
-                html += f"{i},"
+                html = "".join((html, f"{i},"))
             return format_html(html[:-1] + f'">{len(courses)}</a>')
 
         return 0
@@ -107,7 +107,7 @@ class StudentAdmin(admin.ModelAdmin):
         if assignments:
             html = '<a href="/admin/voyage/assignment/?id__in='
             for i in ids:
-                html += f"{i},"
+                html = "".join((html, f"{i},"))
             return format_html(html[:-1] + f'">{len(assignments)}</a>')
 
         return 0
@@ -121,7 +121,7 @@ class StudentAdmin(admin.ModelAdmin):
         if assignments:
             html = '<a href="/admin/voyage/studentassignment/?id__in='
             for i in ids:
-                html += f"{i},"
+                html = "".join((html, f"{i},"))
             return format_html(html[:-1] + f'">{len(assignments)}</a>')
 
         return 0
@@ -156,7 +156,7 @@ class ContentAdmin(admin.ModelAdmin):
         if courses:
             html = '<a href="/admin/voyage/course/?id__in='
             for i in ids:
-                html += f"{i},"
+                html = "".join((html, f"{i},"))
             return format_html(html[:-1] + f'">{len(courses)}</a>')
 
         return 0
@@ -170,7 +170,7 @@ class ContentAdmin(admin.ModelAdmin):
         if assignments:
             html = '<a href="/admin/voyage/assignment/?id__in='
             for i in ids:
-                html += f"{i},"
+                html = "".join((html, f"{i},"))
             return format_html(html[:-1] + f'">{len(assignments)}</a>')
 
         return 0
@@ -194,7 +194,7 @@ class ProgramAdmin(admin.ModelAdmin):
         if courses:
             html = '<a href="/admin/voyage/course/?id__in='
             for i in ids:
-                html += f"{i},"
+                html = "".join((html, f"{i},"))
             return format_html(html[:-1] + f'">{len(courses)}</a>')
 
         return 0
@@ -208,7 +208,7 @@ class ProgramAdmin(admin.ModelAdmin):
         if students:
             html = '<a href="/admin/voyage/student/?id__in='
             for i in ids:
-                html += f"{i},"
+                html = "".join((html, f"{i},"))
             return format_html(html[:-1] + f'">{len(students)}</a>')
 
         return 0
@@ -231,7 +231,7 @@ class CourseAdmin(admin.ModelAdmin):
         if assignments:
             html = '<a href="/admin/voyage/assignment/?id__in='
             for i in ids:
-                html += f"{i},"
+                html = "".join((html, f"{i},"))
             return format_html(html[:-1] + f'">{len(assignments)}</a>')
 
         return 0
@@ -251,7 +251,7 @@ class CourseAdmin(admin.ModelAdmin):
         if graded:
             html = '<a href="/admin/voyage/studentassignment/?id__in='
             for i in ids:
-                html += f"{i},"
+                html = "".join((html, f"{i},"))
             return format_html(html[:-1] + f'">{len(graded)}</a>')
 
         return 0

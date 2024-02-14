@@ -17,9 +17,6 @@ class Faculty(QuxModel):
     user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE)
     github = models.CharField(max_length=39, unique=True)
     is_active = models.BooleanField(default=True)
-    
-    def __str__(self):
-        return self.user.username
 
     def programs(self):
         """
@@ -179,7 +176,7 @@ class Content(QuxModel):
 
     def __str__(self):
         return self.name
-    
+
     def random_data(self):
         """
         Generates Random Data
@@ -203,10 +200,7 @@ class Student(QuxModel):
     github = models.CharField(max_length=39, unique=True)
     is_active = models.BooleanField(default=True)
     program = models.ForeignKey(Program, on_delete=models.DO_NOTHING)
-    
-    def __str__(self):
-        return self.user.username
-    
+
     def courses(self):
         """
         List of courses the student is doing
