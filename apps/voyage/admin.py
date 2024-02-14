@@ -34,8 +34,7 @@ class FacultyAdmin(admin.ModelAdmin):
             html = '<a href="/admin/voyage/course/?id__in='
             for i in ids:
                 html += f"{i},"
-            html = html[:-1] + f'">{len(courses)}</a>'
-            return format_html(html)
+            return format_html(html[:-1] + f'">{len(courses)}</a>')
         return 0
 
     def num_assignments(self, obj):
@@ -49,8 +48,8 @@ class FacultyAdmin(admin.ModelAdmin):
             html = '<a href="/admin/voyage/assignment/?id__in='
             for i in ids:
                 html += f"{i},"
-            html = html[:-1] + f'">{len(assignments)}</a>'
-            return format_html(html)
+            return format_html(html[:-1] + f'">{len(assignments)}</a>')
+
         return 0
 
     def graded_assignments(self, obj):
@@ -63,8 +62,8 @@ class FacultyAdmin(admin.ModelAdmin):
             html = '<a href="/admin/voyage/studentassignment/?id__in='
             for i in ids:
                 html += f"{i},"
-            html = html[:-1] + f'">{len(assignments)}</a>'
-            return format_html(html)
+            return format_html(html[:-1] + f'">{len(assignments)}</a>')
+
         return 0
 
 
@@ -95,8 +94,8 @@ class StudentAdmin(admin.ModelAdmin):
             html = '<a href="/admin/voyage/course/?id__in='
             for i in ids:
                 html += f"{i},"
-            html = html[:-1] + f'">{len(courses)}</a>'
-            return format_html(html)
+            return format_html(html[:-1] + f'">{len(courses)}</a>')
+
         return 0
 
     def assignments_assigned(self, obj):
@@ -109,8 +108,8 @@ class StudentAdmin(admin.ModelAdmin):
             html = '<a href="/admin/voyage/assignment/?id__in='
             for i in ids:
                 html += f"{i},"
-            html = html[:-1] + f'">{len(assignments)}</a>'
-            return format_html(html)
+            return format_html(html[:-1] + f'">{len(assignments)}</a>')
+
         return 0
 
     def assignments_submitted(self, obj):
@@ -123,8 +122,8 @@ class StudentAdmin(admin.ModelAdmin):
             html = '<a href="/admin/voyage/studentassignment/?id__in='
             for i in ids:
                 html += f"{i},"
-            html = html[:-1] + f'">{len(assignments)}</a>'
-            return format_html(html)
+            return format_html(html[:-1] + f'">{len(assignments)}</a>')
+
         return 0
 
     def avg_grade(self, obj):
@@ -158,8 +157,8 @@ class ContentAdmin(admin.ModelAdmin):
             html = '<a href="/admin/voyage/course/?id__in='
             for i in ids:
                 html += f"{i},"
-            html = html[:-1] + f'">{len(courses)}</a>'
-            return format_html(html)
+            return format_html(html[:-1] + f'">{len(courses)}</a>')
+
         return 0
 
     def num_assignments(self, obj):
@@ -172,8 +171,8 @@ class ContentAdmin(admin.ModelAdmin):
             html = '<a href="/admin/voyage/assignment/?id__in='
             for i in ids:
                 html += f"{i},"
-            html = html[:-1] + f'">{len(assignments)}</a>'
-            return format_html(html)
+            return format_html(html[:-1] + f'">{len(assignments)}</a>')
+
         return 0
 
 
@@ -196,9 +195,8 @@ class ProgramAdmin(admin.ModelAdmin):
             html = '<a href="/admin/voyage/course/?id__in='
             for i in ids:
                 html += f"{i},"
-            html = html[:-1]
-            html += f'">{len(courses)}</a>'
-            return format_html(html)
+            return format_html(html[:-1] + f'">{len(courses)}</a>')
+
         return 0
 
     def num_students(self, obj):
@@ -211,8 +209,8 @@ class ProgramAdmin(admin.ModelAdmin):
             html = '<a href="/admin/voyage/student/?id__in='
             for i in ids:
                 html += f"{i},"
-            html = html[:-1] + f'">{len(students)}</a>'
-            return format_html(html)
+            return format_html(html[:-1] + f'">{len(students)}</a>')
+
         return 0
 
 
@@ -234,8 +232,8 @@ class CourseAdmin(admin.ModelAdmin):
             html = '<a href="/admin/voyage/assignment/?id__in='
             for i in ids:
                 html += f"{i},"
-            html = html[:-1] + f'">{len(assignments)}</a>'
-            return format_html(html)
+            return format_html(html[:-1] + f'">{len(assignments)}</a>')
+
         return 0
 
     def graded_100(self, obj):
@@ -254,8 +252,8 @@ class CourseAdmin(admin.ModelAdmin):
             html = '<a href="/admin/voyage/studentassignment/?id__in='
             for i in ids:
                 html += f"{i},"
-            html = html[:-1] + f'">{len(graded)}</a>'
-            return format_html(html)
+            return format_html(html[:-1] + f'">{len(graded)}</a>')
+
         return 0
 
 
