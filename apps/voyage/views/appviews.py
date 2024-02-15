@@ -6,7 +6,7 @@ from typing import Any
 from django.views.generic import TemplateView, ListView, DetailView
 from django.shortcuts import redirect, render
 from qux.seo.mixin import SEOMixin
-from ..models import Faculty, Student, StudentAssignment
+from ..models import Faculty, Student, StudentAssignment, Course, Assignment
 from ..forms import CreateCourseForm, CreateAssignmentForm
 
 
@@ -34,6 +34,43 @@ class FacultyDetailView(DetailView):
 
     model = Faculty
     template_name = "voyage/faculty_detail.html"
+
+
+class NumberStudentsView(ListView):
+    """
+    NumberStudents View
+    """
+
+    model = Course
+    template_name = "voyage/common_list.html"
+
+    def get_context_data(self, **kwargs):
+        """
+        returns context data
+        """
+        course = Course.objects.get(id=self.kwargs["pk"])
+        context = super().get_context_data(**kwargs)
+        context["context"] = course.students()
+        print(context)
+        return context
+
+
+class FacultyAssignments(ListView):
+    """
+    FacultyAssignments view
+    """
+
+    model = Course
+    template_name = "voyage/common_list.html"
+    context_object_name = "context"
+
+    def get_queryset(self, *args, **kwargs):
+        """
+        gets queryset
+        """
+        course = Course.objects.get(id=self.kwargs["pk"])
+        queryset = course.assignments()
+        return queryset
 
 
 class StudentsView(SEOMixin, ListView):
@@ -64,24 +101,43 @@ class StudentDetailView(DetailView):
         for i in courses:
             dicn[i] = assignments.filter(course=i)
         context["assignments"] = dicn
+        print(context)
         return context
 
 
-class AssignmentView(SEOMixin, DetailView):
+class StudentsAssignments(ListView):
+    """
+    StudentsAssignments view
+    """
+
+    model = Course
+    template_name = "voyage/common_list.html"
+    context_object_name = "context"
+
+    def get_queryset(self, *args, **kwargs):
+        """
+        gets queryset
+        """
+        course = Course.objects.get(id=self.kwargs["course_id"])
+        student = Student.objects.get(id=self.kwargs["student_id"])
+        assignments = student.assignments().filter(course=course)
+        return assignments
+
+
+class AssignmentView(SEOMixin, ListView):
     """
     Assignment detail
     """
 
-    model = Student
+    model = Assignment
     template_name = "voyage/assignment_list.html"
-    context_object_name = "student"
 
     def get_context_data(self, **kwargs):
         """
         gets context
         """
         context = super().get_context_data(**kwargs)
-        assignments = self.object.assignments()
+        assignments = Assignment.objects.all()
         dicn = {}
         for i in assignments:
             submissions = i.submissions(graded=True)
@@ -91,10 +147,23 @@ class AssignmentView(SEOMixin, DetailView):
                 dicn[i] = [avg]
             else:
                 dicn[i] = [0]
-            dicn[i].append(StudentAssignment.objects.filter(assignment=i))
+            dicn[i].append(
+                StudentAssignment.objects.filter(assignment=i, submitted__isnull=False)
+            )
         context["assignments"] = dicn
         print(context)
         return context
+
+
+class SubmissionsView(ListView):
+    """
+    Submissions view
+    """
+
+    model = StudentAssignment
+    template_name = "voyage/submissions.html"
+    context_object_name = "studentassignments"
+    queryset = StudentAssignment.objects.filter(submitted__isnull=False)
 
 
 class CreateNewCourse(TemplateView):
@@ -119,7 +188,7 @@ class CreateNewCourse(TemplateView):
         form = CreateCourseForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect("faculty_list")
+            return redirect("home")
         return render(request, self.template_name, {"form": form})
 
 
@@ -145,5 +214,5 @@ class CreateNewAssignment(TemplateView):
         form = CreateAssignmentForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect("faculty_list")
+            return redirect("home")
         return render(request, self.template_name, {"form": form})

@@ -5,14 +5,13 @@
     <table>
         <tr>
           <th>Courses</th>
-          <th>Number of Assignments</th>
+          <th class="text-end">Number of Assignments</th>
         </tr>
         {% for i, value in assignments.items %}
         <tr>
           <td>{{i}}</td>
-          <td><a href="">{{value|length}}</a></td>
+          <td class="text-end"><a href="{% url 'student_assignments' student_id=student.id course_id=i.id %}">{{value|length}}</a></td>
         </tr>
         {% endfor %}
     </table>
-    <a href="{% url 'student_assignments' pk=student.id %}"><button>All Assignments</button></a>
     {% endblock %}

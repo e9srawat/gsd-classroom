@@ -6,4 +6,6 @@
     <li><a href="{% url 'student_detail' pk=i.id %}">{{i.user.username}}</a></li>
     {% endfor %}
 </ul>
+<a class="btn btn-primary" href="{% url 'all_assignments' %}">All Assignments</a>
+<a class="btn btn-primary" href="{% url 'submissions' %}">Submissions</a>
 {% endblock content %}

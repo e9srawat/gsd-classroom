@@ -4,14 +4,14 @@
     <table>
         <tr>
           <th>Assignments</th>
-          <th>Average Grade</th>
-          <th>Submissions</th>
+          <th class="text-end">Average Grade</th>
+          <th class="text-end">Submissions</th>
         </tr>
         {% for i,j in assignments.items %}
         <tr>
           <td>{{i.rubric}}</td>
-          <td><a href="">{{j.0}}</a></td>
-          <td><a href="">{{j.1|length}}</a></td>
+          <td class="text-end">{{j.0}}</td>
+          <td class="text-end">{{j.1|length}}</td>
         </tr>
         {% endfor %}
     </table>

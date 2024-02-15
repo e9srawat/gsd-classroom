@@ -1,0 +1,15 @@
+{% extends "voyage/base.html" %}
+{% block content %}
+
+<ul>
+{% for i in context %}
+
+{% if i.rubric %}
+    <li>{{i.rubric}}</li>
+    {% else %}
+    <li>{{i}}</li>
+{% endif %}
+
+{% endfor %}
+</ul>
+{% endblock content %}
