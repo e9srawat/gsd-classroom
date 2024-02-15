@@ -1,0 +1,9 @@
+{% extends "voyage/base.html" %}
+
+{% block content %}
+<ul>
+    {% for i in student %}
+    <li><a href="{% url 'student_detail' pk=i.id %}">{{i.user.username}}</a></li>
+    {% endfor %}
+</ul>
+{% endblock content %}

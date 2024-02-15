@@ -22,13 +22,13 @@ class Faculty(QuxModel):
         """
         returns list of programs which has the current faculty
         """
-        return set(Program.objects.filter(assignment__content__faculty=self))
+        return Program.objects.filter(assignment__content__faculty=self).distinct()
 
     def courses(self):
         """
         returns list of courses which has the current faculty
         """
-        return set(Course.objects.filter(assignment__content__faculty=self))
+        return Course.objects.filter(assignment__content__faculty=self).distinct()
 
     def content(self, program=None, course=None):
         """
@@ -39,12 +39,20 @@ class Faculty(QuxModel):
             return [
                 i
                 for i in content_list
-                if i.assignment_set.filter(program=program, course=course)
+                if Assignment.objects.filter(program=program, course=course, content=i)
             ]
         if program:
-            return [i for i in content_list if i.assignment_set.filter(program=program)]
+            return [
+                i
+                for i in content_list
+                if Assignment.objects.filter(program=program, content=i)
+            ]
         if course:
-            return [i for i in content_list if i.assignment_set.filter(course=course)]
+            return [
+                i
+                for i in content_list
+                if Assignment.objects.filter(course=course, content=i)
+            ]
         return content_list
 
     def assignments_graded(self, assignment=None):
@@ -52,10 +60,12 @@ class Faculty(QuxModel):
         returns list of studentassignments that have been graded
         """
         if assignment:
-            return self.studentassignment_set.filter(assignment=assignment).exclude(
-                grade__isnull=True
-            )
-        return self.studentassignment_set.exclude(grade__isnull=True)
+            return StudentAssignment.objects.filter(
+                assignment=assignment, reviewer=self
+            ).exclude(grade__isnull=True)
+        return StudentAssignment.objects.filter(reviewer=self).exclude(
+            grade__isnull=True
+        )
 
     def random_data(self):
         """
@@ -128,19 +138,19 @@ class Course(QuxModel):
         """
         list of all programs with current course
         """
-        return set(Program.objects.filter(assignment__course=self))
+        return Program.objects.filter(assignment__course=self).distinct()
 
     def students(self):
         """
         list of all sudents doing the current course
         """
-        return set(Student.objects.filter(program__assignment__course=self))
+        return Student.objects.filter(program__assignment__course=self).distinct()
 
     def content(self):
         """
         list of all content in the current course
         """
-        return set(Content.objects.filter(assignment__course=self))
+        return Content.objects.filter(assignment__course=self).distinct()
 
     def assignments(self):
         """
@@ -201,11 +211,14 @@ class Student(QuxModel):
     is_active = models.BooleanField(default=True)
     program = models.ForeignKey(Program, on_delete=models.DO_NOTHING)
 
+    def __str__(self):
+        return self.user.username
+    
     def courses(self):
         """
         List of courses the student is doing
         """
-        return set(Course.objects.filter(assignment__program__student=self))
+        return Course.objects.filter(assignment__program__student=self).distinct()
 
     def assignments(self):
         """
@@ -218,30 +231,30 @@ class Student(QuxModel):
         List of assignments submitted by the student
         """
         if assignment:
-            return self.studentassignment_set.filter(
-                assignment=assignment, submitted__isnull=False
+            return StudentAssignment.objects.filter(
+                assignment=assignment, student=self, submitted__isnull=False
             )
-        return self.studentassignment_set.filter(submitted__isnull=False)
+        return StudentAssignment.objects.filter(student=self, submitted__isnull=False)
 
     def assignments_not_submited(self, assignment=None):
         """
         List of assignments not submitted by the student
         """
         if assignment:
-            return self.studentassignment_set.filter(
-                assignment=assignment, submitted__isnull=True
+            return StudentAssignment.objects.filter(
+                assignment=assignment, student=self, submitted__isnull=True
             )
-        return self.studentassignment_set.filter(submitted__isnull=True)
+        return StudentAssignment.objects.filter(student=self, submitted__isnull=True)
 
     def assignments_graded(self, assignment=None):
         """
         List of assignments submitted by the student that have been graded
         """
         if assignment:
-            return self.studentassignment_set.filter(
-                assignment=assignment, grade__isnull=False
+            return StudentAssignment.objects.filter(
+                assignment=assignment, student=self, grade__isnull=False
             )
-        return self.studentassignment_set.filter(grade__isnull=False)
+        return StudentAssignment.objects.filter(student=self, grade__isnull=False)
 
     def random_data(self):
         """
@@ -305,8 +318,10 @@ class Assignment(QuxModel):
         Return a queryset of submissions that are either all, graded, or not graded.
         """
         if graded:
-            return self.studentassignment_set.filter(grade__isnull=False)
-        return self.studentassignment_set.filter(grade__isnull=True)
+            return StudentAssignment.objects.filter(
+                assignment=self, grade__isnull=False
+            )
+        return StudentAssignment.objects.filter(assignment=self, grade__isnull=True)
 
     def random_data(self):
         """

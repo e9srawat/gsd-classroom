@@ -1,0 +1,18 @@
+{% extends "voyage/base.html" %}
+{% block content %}
+{{student.user}}
+    <table>
+        <tr>
+          <th>Assignments</th>
+          <th>Average Grade</th>
+          <th>Submissions</th>
+        </tr>
+        {% for i,j in assignments.items %}
+        <tr>
+          <td>{{i.rubric}}</td>
+          <td><a href="">{{j.0}}</a></td>
+          <td><a href="">{{j.1|length}}</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+{% endblock content %}

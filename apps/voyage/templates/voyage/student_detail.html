@@ -1,0 +1,18 @@
+{% extends "voyage/base.html" %}
+  {% block content %}
+{{student.user}}
+
+    <table>
+        <tr>
+          <th>Courses</th>
+          <th>Number of Assignments</th>
+        </tr>
+        {% for i, value in assignments.items %}
+        <tr>
+          <td>{{i}}</td>
+          <td><a href="">{{value|length}}</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+    <a href="{% url 'student_assignments' pk=student.id %}"><button>All Assignments</button></a>
+    {% endblock %}
