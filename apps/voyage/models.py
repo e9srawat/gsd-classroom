@@ -255,6 +255,18 @@ class Student(QuxModel):
                 assignment=assignment, student=self, grade__isnull=False
             )
         return StudentAssignment.objects.filter(student=self, grade__isnull=False)
+    
+    def add_course_repo(self):
+        courses = self.courses()
+        github = self.github.split(",")[0]
+        print(github)
+        for i in courses:
+            if i.name in self.github:
+                continue
+            repo = f" ,{github}/{i.name}"
+            github = self.github+repo
+        self.github=github
+        self.save()
 
     def random_data(self):
         """
@@ -283,7 +295,7 @@ class Student(QuxModel):
             user = user_model.objects.create(
                 username=username, password=password, email=email
             )
-            github = "github/" + username
+            github = "https://github.com/" + username
             program = random.choice(programs)
             lst.append(Student(user=user, github=github, program=program))
         Student.objects.bulk_create(lst)
